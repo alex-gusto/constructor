@@ -1,26 +1,17 @@
-const Koa = require('koa')
-const serve = require('koa-static')
-// const {ApolloServer, gql} = require('apollo-server-koa')
-const Users = require('./models/users')
-const db = require('./mongo')()
+const Koa = require('koa');
+const serve = require('koa-static');
+const router = require('./router');
+require('dotenv').config()
 
 const initApp = () => {
-    const app = new Koa()
+  const app = new Koa();
 
-    require('./router')(app)
-// server.applyMiddleware({app})
+  router.prefix(process.env.VUE_APP_API_PREFIX)
 
-    // Object.keys(routes).forEach(route => {
-    //     app.use(routes[route].routes())
-    // })
+  app
+    .use(router.routes())
+    .use(serve(`${__dirname}/dist`))
+    .listen({ port: process.env.SERVER_PORT }, () => console.log(`🚀 Server ready at http://localhost:${process.env.SERVER_PORT}`));
+};
 
-    app
-        .use(serve(__dirname + '/dist'))
-        .listen({port: 4000}, () =>
-            console.log(`🚀 Server ready at http://localhost:4000`)
-        )
-}
-
-initApp()
-// db.on('open', initApp)
-// db.on('error', (e) => console.log(e))
+initApp();

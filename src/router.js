@@ -1,6 +1,6 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import Home from './views/Home.vue'
+import Dashboard from './views/dashboard/index.vue'
 
 Vue.use(Router)
 
@@ -10,8 +10,22 @@ export default new Router({
   routes: [
     {
       path: '/',
-      name: 'home',
-      component: Home
-    }
-  ]
+      name: 'dashboard',
+      component: Dashboard,
+    }, {
+      path: '/blog',
+      component: () => import('./views/blog/index.vue'),
+      children: [
+        {
+          path: '',
+          component: () => import('./views/blog/childs/articlesList.vue'),
+        },
+        {
+          path: 'new-article',
+          name: 'new-article',
+          component: () => import('./views/blog/childs/newArticle.vue'),
+        },
+      ],
+    },
+  ],
 })
