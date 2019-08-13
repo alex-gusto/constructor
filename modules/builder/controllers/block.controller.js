@@ -8,7 +8,6 @@ const writeFile = util.promisify(require('fs').writeFile)
 const { createDefaultCompiler, assemble } = require('@vue/component-compiler');
 
 const compiler = createDefaultCompiler()
-
 const filePath = 'D:/Projects/constructor/temp/sections/SectionContent.vue'
 const fileName = 'SectionContent.vue'
 
