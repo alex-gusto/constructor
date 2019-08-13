@@ -28,9 +28,9 @@ export default {
                     href: '/blog'
                 },
                 {
-                    label: 'Support',
+                    label: 'Builder',
                     icon: "mdi-spa",
-                    href: '/support'
+                    href: '/builder'
                 }
             ])
         }

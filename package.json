@@ -10,6 +10,7 @@
     "start": "npm run server | npm run serve"
   },
   "dependencies": {
+    "@vue/component-compiler": "^4.0.0",
     "axios": "^0.19.0",
     "core-js": "^2.6.5",
     "dotenv": "^8.0.0",
@@ -38,5 +39,11 @@
     "vue-cli-plugin-vuetify": "^0.6.3",
     "vue-template-compiler": "^2.6.10",
     "vuetify-loader": "^1.2.2"
+  },
+  "nodemonConfig": {
+    "ignore": [
+      "temp/*"
+    ],
+    "delay": "200"
   }
 }

@@ -26,6 +26,9 @@ export default new Router({
           component: () => import('./views/blog/childs/newArticle.vue'),
         },
       ],
+    }, {
+      path: '/builder',
+      component: () => import('./views/builder/index.vue'),
     },
   ],
 })
