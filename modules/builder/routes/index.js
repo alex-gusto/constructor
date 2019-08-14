@@ -10,7 +10,7 @@ const router = new Router({
 router.post('/', bodyParse({
   multipart: true,
   formidable: {
-    uploadDir: `${process.cwd()}/temp/sections`,
+    uploadDir: `${process.cwd()}/tmp/sections`,
     onFileBegin: (name, file) => {
       const folder = path.dirname(file.path);
       file.path = path.join(folder, file.name);

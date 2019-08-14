@@ -42,8 +42,7 @@
   },
   "nodemonConfig": {
     "ignore": [
-      "temp/*"
-    ],
-    "delay": "200"
+      "tmp/*"
+    ]
   }
 }
