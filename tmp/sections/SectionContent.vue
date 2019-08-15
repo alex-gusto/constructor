@@ -10,7 +10,7 @@
     props: ['title', 'content'],
 
     methods: {
-      t() {
+      t () {
         return ''
       }
     }
