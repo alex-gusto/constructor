@@ -2,15 +2,24 @@
   <v-flex>
     <v-row>
       <v-col>
-        <form @submit.prevent="submit">
-          <v-text-field
-            v-for="(option, key) in options"
-            :key="key"
-            v-model="formData[key]"
-            :label="key"
-          />
-          <button type="submit">SUBMIT</button>
-        </form>
+        <div>
+
+          {{ blockName }}
+          <v-btn text icon color="pink" @click.native="removeBlock">
+            <v-icon>mdi-delete</v-icon>
+          </v-btn>
+
+          <form @submit.prevent="submit">
+            <FormData :options="options"/>  
+            <v-text-field
+              v-for="(option, key) in options"
+              :key="key"
+              v-model="formData[key]"
+              :label="key"
+            />
+            <button type="submit">SUBMIT</button>
+          </form>
+        </div>
       </v-col>
 
       <!-- <v-col> -->
@@ -27,6 +36,21 @@
   export default {
     inheritAttrs: false,
     name: 'DynamicComponent',
+
+    components:{
+      FormData:{
+        props: ['options'],
+        render(h){
+          const childs = Object.keys(this.options).map(option=>{
+              const item = this.options[option]
+              return h('div', option)
+          })
+
+          return h('div', {}, childs)
+        }
+      }
+    },
+
     props: {
       id: String,
       blockName: {
@@ -46,7 +70,8 @@
           acc[option] = this.options[option]
           return acc
         }, {})
-
+      console.log(this.options);
+      
       return {
         formData
       }
@@ -91,6 +116,15 @@
             options: this.formData
           })
           console.log(data)
+        } catch {
+
+        }
+      },
+
+      async removeBlock(){
+         try {
+          const { data } = await this.$axios.delete('/builder/' + this.id)
+          this.$emit('removed')
         } catch {
 
         }

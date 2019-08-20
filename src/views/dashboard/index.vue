@@ -7,6 +7,7 @@
           v-bind="block"
           :id="block._id"
           :key="block._id"
+          @removed="getBlocks"
         />
       </v-col>
       
