@@ -2,6 +2,7 @@ const util = require('util')
 const path = require('path')
 const readFile = util.promisify(require('fs').readFile)
 const compiler = require('vue-template-compiler')
+
 const tempDir = path.resolve(process.cwd(), 'tmp')
 
 // const { Schema } = require('mongoose')
@@ -39,7 +40,7 @@ exports.post = async (ctx, next) => {
 
         const block = new Model({
           blockName,
-          options: schema
+          options: schema,
         })
 
         block.save((err) => {

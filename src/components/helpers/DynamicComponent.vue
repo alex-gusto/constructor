@@ -1,7 +1,7 @@
 <template>
   <v-flex>
     <v-row>
-      <v-col sm="3">
+      <v-col>
         <form @submit.prevent="submit">
           <v-text-field
             v-for="(option, key) in options"
@@ -13,12 +13,12 @@
         </form>
       </v-col>
 
-      <v-col>
-        <component
+      <!-- <v-col> -->
+        <!-- <component
           :is="component"
           v-bind="formData"
-        />
-      </v-col>
+        /> -->
+      <!-- </v-col> -->
     </v-row>
   </v-flex>
 </template>
@@ -43,9 +43,10 @@
     data() {
       const formData = Object.keys(this.options)
         .reduce((acc, option) => {
-          acc[option] = ''
+          acc[option] = this.options[option]
           return acc
         }, {})
+
       return {
         formData
       }
