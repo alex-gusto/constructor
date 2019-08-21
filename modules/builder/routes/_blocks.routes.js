@@ -3,11 +3,9 @@ const bodyParse = require('koa-body')
 const path = require('path')
 const Ctrl = require('../controllers/blocks.controller')
 
-const router = new Router({
-  prefix: '/blocks'
-})
+const router = new Router()
 
-router.post('/', bodyParse({
+router.post('/blocks', bodyParse({
   multipart: true,
   formidable: {
     uploadDir: `${process.cwd()}/tmp/sections`,
@@ -18,8 +16,12 @@ router.post('/', bodyParse({
   }
 }), Ctrl.post)
 
-router.get('/', Ctrl.getAll)
+router.get('/blocks', Ctrl.getAll)
 
-router.put('/', bodyParse({ multipart: true }), Ctrl.update)
+router.put('/blocks', bodyParse({ multipart: true }), Ctrl.update)
+
+
+router.delete('/blocks/:id', Ctrl.delete)
+
 
 module.exports = router

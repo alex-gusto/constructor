@@ -3,5 +3,6 @@
 module.exports = {
   modules: [
     'builder',
+    'api',
   ],
 }

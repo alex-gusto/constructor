@@ -7,13 +7,11 @@ const router = new Router({
 })
 
 // Load routes
-glob('*.routes.js', { cwd: path.resolve(__dirname, '.') }, (err, files) => {
-  if (err) console.error(err)
-  files.forEach((file) => {
-    const route = require(`./${file}`)
-    console.log(route)
-    router.use('', route.routes(), route.allowedMethods())
-  })
+const files = glob.sync('*.routes.js', { cwd: path.resolve(__dirname, '.') })
+
+files.forEach((file) => {
+  const route = require(`./${file}`)
+  router.use('', route.routes(), route.allowedMethods())
 })
 
 module.exports = router

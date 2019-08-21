@@ -11,24 +11,38 @@ export default new Router({
     {
       path: '/',
       name: 'dashboard',
-      component: Dashboard,
+      component: Dashboard
     }, {
       path: '/blog',
       component: () => import('./views/blog/index.vue'),
       children: [
         {
           path: '',
-          component: () => import('./views/blog/childs/articlesList.vue'),
+          component: () => import('./views/blog/childs/articlesList.vue')
         },
         {
           path: 'new-article',
           name: 'new-article',
-          component: () => import('./views/blog/childs/newArticle.vue'),
-        },
-      ],
+          component: () => import('./views/blog/childs/newArticle.vue')
+        }
+      ]
     }, {
       path: '/builder',
-      component: () => import('./views/builder/index.vue'),
-    },
-  ],
+      component: () => import('./views/builder/index.vue')
+    }, {
+      path: '/pages',
+      component: () => import('./views/pages/index.vue'),
+      children: [
+        {
+          path: '',
+          component: () => import('./views/pages/childs/pagesList.vue')
+        },
+        {
+          path: 'new-page',
+          name: 'new-page',
+          component: () => import('./views/pages/childs/newPage.vue')
+        }
+      ]
+    }
+  ]
 })

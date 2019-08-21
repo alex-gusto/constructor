@@ -1,11 +1,28 @@
 <template>
   <v-flex>
-    <DynamicComponent
-      v-for="(block) in blocks"
-      v-bind="block"
-      :id="block._id"
-      :key="block._id"
-    />
+    <v-row>
+      <v-col sm="3">
+        <DynamicComponent
+          v-for="(block) in blocks"
+          v-bind="block"
+          :id="block._id"
+          :key="block._id"
+          @removed="getBlocks"
+        />
+      </v-col>
+      
+      <v-col>
+        <v-btn outlined color="primary" dark @click.native="reloadIframe">Reload</v-btn>
+        <iframe 
+        ref="preview"
+         name="preview"
+         src="http://localhost:3999" 
+         frameborder="0" 
+         width="100%" 
+         height="100%"
+         />
+      </v-col> 
+    </v-row>
   </v-flex>
 </template>
 
@@ -32,6 +49,11 @@
         } catch {
 
         }
+      },
+
+      reloadIframe(){
+         const win = this.$refs.preview.contentWindow;
+         win.postMessage("сообщение", "*");
       }
     }
   }

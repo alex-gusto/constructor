@@ -2,6 +2,8 @@ const util = require('util')
 const path = require('path')
 const readFile = util.promisify(require('fs').readFile)
 const compiler = require('vue-template-compiler')
+const isFunction = require('lodash/isFunction')
+
 const tempDir = path.resolve(process.cwd(), 'tmp')
 
 // const { Schema } = require('mongoose')
@@ -35,15 +37,37 @@ exports.post = async (ctx, next) => {
 
             return acc
           }, schema)
+        } else {
+          Object.keys(props).reduce((acc, prop) => {
+            const item = props[prop]
+
+            if (isFunction(item)) {
+              acc[prop] = item()
+              return acc
+            }
+
+            if (item.hasOwnProperty('default')) {
+              if (isFunction(item.default)) {
+                acc[prop] = item.default()
+                return acc
+              }
+              acc[prop] = item.default
+              return acc
+            }
+
+            acc[prop] = item.type()
+
+            return acc
+          }, schema)
         }
 
         const block = new Model({
           blockName,
-          options: schema
+          options: schema,
         })
 
         block.save((err) => {
-          if (!err) console.log('Success!')
+          if (!err) console.log('Success!', schema)
         })
       })
       .catch(e => console.log(e))
@@ -53,7 +77,7 @@ exports.post = async (ctx, next) => {
   ctx.body = ctx.request.files
 }
 
-exports.getAll = async (ctx, next) => {
+exports.getAll = async (ctx) => {
   try {
     ctx.body = await Model.find()
     ctx.status = 200
@@ -63,11 +87,24 @@ exports.getAll = async (ctx, next) => {
   }
 }
 
-exports.update = async (ctx, next) => {
-  console.log(ctx.request.body)
+exports.update = async (ctx) => {
+  const { id: _id, options } = ctx.request.body
+  console.log(_id, options);
 
   try {
-    ctx.body = await Model.updateOne(ctx.request.body)
+    ctx.body = await Model.findByIdAndUpdate({ _id }, { options })
+    ctx.status = 201
+  } catch (e) {
+    ctx.status = 500
+    ctx.body = e
+  }
+}
+
+exports.delete = async (ctx) => {
+  const { id: _id } = ctx.params
+
+  try {
+    ctx.body = await Model.findByIdAndDelete({ _id })
     ctx.status = 201
   } catch (e) {
     ctx.status = 500

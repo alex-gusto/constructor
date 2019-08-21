@@ -5,6 +5,6 @@ module.exports = () => {
   require('./modules/builder/models/block.model')
 
   return mongoose.createConnection(
-    'mongodb://alexgusto:TQKrG6R2pYNYRAm@ds032887.mlab.com:32887/vue', { useNewUrlParser: true }
+    'mongodb://alexgusto:TQKrG6R2pYNYRAm@ds032887.mlab.com:32887/vue', { useNewUrlParser: true, useFindAndModify: false },
   )
 }
