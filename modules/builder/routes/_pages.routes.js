@@ -1,13 +1,17 @@
 const Router = require('koa-router')
 const bodyParse = require('koa-body')
 // const path = require('path')
-const Ctrl = require('../controllers/pages.controller')
+const PageController = require('../controllers/pages.controller')
+
+const Ctrl = new PageController()
 
 const router = new Router({
   prefix: '/pages'
 })
 
-router.get('/:id', Ctrl.get)
+router.get('/', Ctrl.getAll)
+
+router.get('/:id', Ctrl.getOne)
 
 router.post('/', bodyParse({ multipart: true }), Ctrl.create)
 

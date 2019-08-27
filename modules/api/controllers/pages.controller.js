@@ -1,27 +1,17 @@
-const db = require('../../../mongo')()
+const db = require('@db')()
+const Controller = require('~/controllers/abstract.controller.js')
 
-const Model = db.model('Block')
+const Model = db.model('Pages')
 
-module.exports.get = async (ctx) => {
-  ctx.status = 200
-  ctx.body = {
-    blocks: await Model.find(),
-    meta: {
-      breadcrumbs: {
-        '@context': 'http://schema.org',
-        '@type': 'BreadcrumbList',
-        itemListElement: [],
-      },
-      seo: {
-        title: 'Тітле',
-        keywords: 'слова',
-        description: 'Деск',
-        'og:title': 'Тітле',
-        'og:description': 'Деск',
-        'og:image': {
-          src: '/storage/uploads/8d69e565-9cd7-41c4-80fa-d0bd9f0a37e8.jpg',
-        },
-      },
-    },
+class PageController extends Controller {
+  constructor() {
+    super(Model)
+  }
+
+  async getPage(ctx) {
+    const { alias } = ctx.params
+    await this.getOne(ctx, { alias })
   }
 }
+
+module.exports = PageController

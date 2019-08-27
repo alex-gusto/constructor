@@ -1,6 +1,7 @@
 <template>
   <v-flex>
-    <router-view transition="fade-transition"/>
+
+    <router-view/>
 
     <v-fab-transition>
       <v-btn
@@ -14,18 +15,6 @@
         @click.native="$router.push('/pages/new-page')"
       >
         <v-icon color="white">mdi-plus</v-icon>
-      </v-btn>
-
-      <v-btn
-        v-else
-        color="green"
-        fab
-        fixed
-        bottom
-        right
-        key="save"
-      >
-        <v-icon color="white">mdi-content-save</v-icon>
       </v-btn>
     </v-fab-transition>
   </v-flex>

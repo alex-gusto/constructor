@@ -1,12 +1,14 @@
 const Router = require('koa-router')
 // const bodyParse = require('koa-body')
-const Ctrl = require('../controllers/pages.controller')
+const PageController = require('../controllers/pages.controller')
+
+const ctrl = new PageController()
 
 const router = new Router({
-  prefix: '/front-api',
+  prefix: '/front-api'
 })
 
-router.get('/en/pages/home', Ctrl.get)
+router.get('/en/pages/:alias', ctrl.getPage.bind(ctrl))
 
 router.get('/', (ctx) => {
   ctx.body = {
@@ -16,18 +18,18 @@ router.get('/', (ctx) => {
       attributes: {
         scripts: {
           head: {
-            end: '<script>console.log("end head")</script>',
+            end: '<script>console.log("end head")</script>'
           },
           body: {
             begin: '<script>console.log("begin body")</script>',
-            end: '<script>console.log("end body")</script>',
-          },
+            end: '<script>console.log("end body")</script>'
+          }
         },
         menu: {
-          data: [],
-        },
-      },
-    },
+          data: []
+        }
+      }
+    }
   }
 })
 

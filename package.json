@@ -7,7 +7,8 @@
     "build": "vue-cli-service build",
     "lint": "vue-cli-service lint",
     "server": "nodemon app.js",
-    "start": "npm run server | npm run serve"
+    "start": "npm run server | npm run serve",
+    "postinstall": "link-module-alias"
   },
   "dependencies": {
     "@vue/component-compiler": "^4.0.0",
@@ -19,6 +20,7 @@
     "koa-body": "^4.1.0",
     "koa-router": "^7.4.0",
     "koa-static": "^5.0.0",
+    "link-module-alias": "^1.2.0",
     "mongoose": "^5.6.9",
     "vue": "^2.6.10",
     "vue-node": "^1.1.1",
@@ -46,5 +48,9 @@
     "ignore": [
       "tmp/*"
     ]
+  },
+  "_moduleAliases": {
+    "~": ".",
+    "@db": "./mongo.js"
   }
 }
