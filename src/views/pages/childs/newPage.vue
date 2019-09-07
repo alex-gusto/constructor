@@ -3,18 +3,18 @@
     New page
 
     <v-select
-      v-model="pageData.blocks"
+      v-model="selectedBlocks"
       :items="blocksList"
       label="Standard"
       multiple
       chips
     >
       <template v-slot:selection="{ item }">
-        <v-chip>{{ item.blockName }}</v-chip>
+        <v-chip>{{ item.componentName }}</v-chip>
       </template>
 
       <template v-slot:item="{ item }">
-        {{ item.blockName }}
+        {{ item.componentName }}
       </template>
     </v-select>
 
@@ -43,12 +43,22 @@
     data() {
       return {
         blocksList: [],
+        selectedBlocks: [],
 
         pageData: {
-          blocks: [],
           pageId: 'home',
           alias: 'home'
         }
+      }
+    },
+
+    computed: {
+      pageBlocks() {
+        return this.selectedBlocks.map(block => {
+          return {
+            componentId: block._id
+          }
+        })
       }
     },
 
@@ -68,8 +78,12 @@
 
 
       async savePage() {
+        const body = {
+          ...this.pageData,
+          blocks: this.pageBlocks
+        }
         try {
-          const { data } = await this.$axios.post('/builder/pages', this.pageData)
+          const { data } = await this.$axios.post('/builder/pages', body)
           console.log(data)
         } catch (e) {
 

@@ -3,18 +3,18 @@ const bodyParse = require('koa-body')
 // const path = require('path')
 const PageController = require('../controllers/pages.controller')
 
-const Ctrl = new PageController()
+const ctrl = new PageController()
 
 const router = new Router({
   prefix: '/pages'
 })
 
-router.get('/', Ctrl.getAll)
+router.get('/', ctrl.getAll)
 
-router.get('/:id', Ctrl.getOne)
+router.get('/:id', ctrl.getOne)
 
-router.post('/', bodyParse({ multipart: true }), Ctrl.create)
+router.post('/', bodyParse({ multipart: true }), ctrl.create.bind(ctrl))
 
-router.put('/', bodyParse({ multipart: true }), Ctrl.update)
+router.put('/', bodyParse({ multipart: true }), ctrl.update)
 
 module.exports = router

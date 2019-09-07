@@ -1,9 +1,10 @@
 const Router = require('koa-router')
 const bodyParse = require('koa-body')
 const path = require('path')
-const Ctrl = require('../controllers/blocks.controller')
+const BlocksController = require('../controllers/blocks.controller')
 
 const router = new Router()
+const ctrl = new BlocksController()
 
 router.post('/blocks', bodyParse({
   multipart: true,
@@ -14,14 +15,13 @@ router.post('/blocks', bodyParse({
       file.path = path.join(folder, file.name)
     }
   }
-}), Ctrl.post)
+}), ctrl.create.bind(ctrl))
 
-router.get('/blocks', Ctrl.getAll)
+router.get('/blocks', ctrl.getAll.bind(ctrl))
 
-router.put('/blocks', bodyParse({ multipart: true }), Ctrl.update)
+router.put('/blocks/:id', bodyParse({ multipart: true }), ctrl.update)
 
-
-router.delete('/blocks/:id', Ctrl.delete)
+router.delete('/blocks/:id', ctrl.delete)
 
 
 module.exports = router

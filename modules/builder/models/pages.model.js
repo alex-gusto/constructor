@@ -5,12 +5,15 @@ const schema = new Schema({
     type: String
   },
   alias: {
-    type: String
+    type: String,
+    required: true
   },
-  blocks: {
-    type: Array,
-    default: []
-  },
+  blocks: [{
+    dynamicComponentId: {
+      type: Schema.Types.ObjectId,
+      required: true
+    }
+  }],
   meta: {
     type: Schema.Types.Mixed,
     default: {

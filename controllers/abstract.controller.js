@@ -3,6 +3,16 @@ class Controller {
     this.model = model
   }
 
+  setModel(model) {
+    this.model = model
+  }
+
+  /**
+   *
+   * @param ctx - koa context
+   * @param conditions - for finding
+   * @return {Promise<void>}
+   */
   async getOne(ctx, conditions) {
     const result = await this.model.findOne(conditions)
 
@@ -15,7 +25,7 @@ class Controller {
     }
   }
 
-  async getAll() {
+  async getAll(ctx) {
     const data = await this.model.find()
 
     if (data) {
@@ -28,10 +38,10 @@ class Controller {
   }
 
   async create(ctx) {
-    const article = new this.model(ctx.request.body)
+    const unit = new this.model(ctx.request.body)
 
     try {
-      ctx.body = await article.save()
+      ctx.body = await unit.save()
       ctx.status = 201
     } catch (e) {
       ctx.status = 500
@@ -40,11 +50,30 @@ class Controller {
   }
 
   async update(ctx) {
+    const { id } = ctx.params
+    const { options } = ctx.request.body
+    console.log(id, options)
 
+    try {
+      ctx.body = await this.model.findByIdAndUpdate({ _id: id }, { options })
+      ctx.status = 201
+    } catch (e) {
+      ctx.status = 500
+      ctx.body = e
+    }
   }
 
   async delete(ctx) {
+    const { id } = ctx.params
+    console.log(id)
 
+    try {
+      ctx.body = await this.model.findByIdAndDelete({ _id: id })
+      ctx.status = 201
+    } catch (e) {
+      ctx.status = 500
+      ctx.body = e
+    }
   }
 }
 

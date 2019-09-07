@@ -1,114 +1,156 @@
-const util = require('util')
 const path = require('path')
-const readFile = util.promisify(require('fs').readFile)
-const compiler = require('vue-template-compiler')
-const isFunction = require('lodash/isFunction')
-const Controller = require('~/controllers/abstract.controller.js')
-const tempDir = path.resolve(process.cwd(), 'tmp')
-
-// const { Schema } = require('mongoose')
 const { db } = require('@db')
+const { promisify } = require('util')
+const isFunction = require('lodash/isFunction')
+const compiler = require('vue-template-compiler')
+const readFile = promisify(require('fs').readFile)
+const writeFile = promisify(require('fs').writeFile)
+const Controller = require('~/controllers/abstract.controller.js')
+const { Schema } = require('mongoose')
 
-const Model = db.model('Block')
 
-exports.post = async (ctx, next) => {
-  if (!ctx.request.files) return console.error('No files')
+const blocksDir = path.resolve(process.cwd(), 'tmp/sections/')
+const Model = db.model('Blocks')
 
-  const { blocks } = ctx.request.files
-  const blockName = blocks.name
+class BlocksController extends Controller {
+  constructor() {
+    super(Model)
+  }
 
-  if (Array.isArray(blocks)) {
-    console.log(blocks)
-  } else {
-    const filePath = `${tempDir}/sections/${blockName}`
-    console.log(filePath)
+  async create(ctx) {
+    try {
+      const { files } = ctx.request
 
-    readFile(filePath, 'utf-8')
-      .then((source) => {
-        const result = compiler.parseComponent(source, { pad: 'space' })
-        const script = result.script.content
-        const helperFunction = new Function(script.replace('export default', 'return '))
-        const { props } = helperFunction()
+      if (!files) {
+        ctx.body = 'No files found!'
+        ctx.status = 422
+      }
 
-        const schema = {}
-        if (Array.isArray(props)) {
-          props.reduce((acc, prop) => {
-            acc[prop] = ''
+      const { components } = files
 
-            return acc
-          }, schema)
-        } else {
-          Object.keys(props)
-            .reduce((acc, prop) => {
-              const item = props[prop]
+      if (!components) {
+        ctx.body = 'No components found!'
+        ctx.status = 422
+      }
 
-              if (isFunction(item)) {
-                acc[prop] = item()
-                return acc
-              }
+      const parseAndSaveComponentSchema = async (componentName) => {
+        const source = await loadComponent(componentName)
+        const props = getComponentProps(source)
+        if (!props) throw new Error('No props found!')
 
-              if (item.hasOwnProperty('default')) {
-                if (isFunction(item.default)) {
-                  acc[prop] = item.default()
-                  return acc
-                }
-                acc[prop] = item.default
-                return acc
-              }
+        const block = new this.model({
+          componentName: removeExtensions(componentName)
+        })
 
-              acc[prop] = item.type()
+        const { _id: componentId } = await block.save()
 
-              return acc
-            }, schema)
+        const schemaDraft = {
+          componentId: {
+            type: 'ObjectId',
+            default: componentId
+          },
+          componentName: {
+            type: 'String',
+            default: removeExtensions(componentName)
+          },
+          ...createMongoSchemaDraft(props)
         }
 
-        const block = new Model({
-          blockName,
-          options: schema
-        })
+        const fileSource = `
+        const { Schema, model } = require('mongoose')
+        const createSchema = require('../../utils/create-schema.js')
+        
+        const schema = new Schema(createSchema('${JSON.stringify(schemaDraft)}'))
+        module.exports = model('${componentId}', schema)
+        `
+        const filePath = path.resolve(__dirname, `../models/dynamic/${componentId}.model.js`)
+        await writeFile(filePath, fileSource)
+      }
 
-        block.save((err) => {
-          if (!err) console.log('Success!', schema)
-        })
-      })
-      .catch(e => console.log(e))
-  }
 
-
-  ctx.body = ctx.request.files
-}
-
-exports.getAll = async (ctx) => {
-  try {
-    ctx.body = await Model.find()
-    ctx.status = 200
-  } catch (e) {
-    ctx.status = 500
-    ctx.body = e
-  }
-}
-
-exports.update = async (ctx) => {
-  const { id: _id, options } = ctx.request.body
-  console.log(_id, options)
-
-  try {
-    ctx.body = await Model.findByIdAndUpdate({ _id }, { options })
-    ctx.status = 201
-  } catch (e) {
-    ctx.status = 500
-    ctx.body = e
+      if (Array.isArray(components)) {
+        console.log(components)
+      } else {
+        const componentName = components.name
+        ctx.status = 201
+        ctx.body = await parseAndSaveComponentSchema(componentName)
+      }
+    } catch (e) {
+      ctx.body = e
+      ctx.status = 500
+    }
   }
 }
 
-exports.delete = async (ctx) => {
-  const { id: _id } = ctx.params
-
-  try {
-    ctx.body = await Model.findByIdAndDelete({ _id })
-    ctx.status = 201
-  } catch (e) {
-    ctx.status = 500
-    ctx.body = e
-  }
+function removeExtensions(str) {
+  if (!str) return str
+  return str.replace(/\..+$/, '')
 }
+
+function loadComponent(componentName) {
+  const filePath = `${blocksDir}/${componentName}`
+  return readFile(filePath, 'utf-8')
+}
+
+function getComponentProps(source) {
+  // parse component source
+  const result = compiler.parseComponent(source, { pad: 'space' })
+  // get just script
+  const scriptSource = result.script.content
+    .replace(/\n+/gm, '')
+
+  if (!scriptSource) {
+    return
+  }
+
+  // replace export default construction to return
+  const helperFunction = new Function(scriptSource.replace('export default', 'return '))
+
+  // extract props data
+  const { props } = helperFunction()
+  return props
+}
+
+function createMongoSchemaDraft(props) {
+  const schema = {}
+
+  if (Array.isArray(props)) {
+    props.reduce((acc, prop) => {
+      acc[prop] = {
+        type: 'String',
+        default: prop + ' lorem ipsum'
+      }
+
+      return acc
+    }, schema)
+  } else {
+    Object.keys(props)
+      .reduce((acc, prop) => {
+        const item = props[prop]
+
+        if (isFunction(item)) {
+          acc[prop] = item()
+          return acc
+        }
+
+        if (item.hasOwnProperty('default')) {
+          if (isFunction(item.default)) {
+            acc[prop] = item.default()
+            return acc
+          }
+
+          acc[prop] = item.default
+          return acc
+        }
+
+        acc[prop] = item.type()
+        return acc
+      }, schema)
+  }
+
+  return schema
+}
+
+
+module.exports = BlocksController
+

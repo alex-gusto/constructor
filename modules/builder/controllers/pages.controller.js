@@ -7,6 +7,15 @@ class PageController extends Controller {
   constructor() {
     super(Model)
   }
+
+  // async create(ctx) {
+  //   try {
+  //
+  //   } catch (e) {
+  //     ctx.body = e
+  //     ctx.status = 500
+  //   }
+  // }
 }
 
 module.exports = PageController
