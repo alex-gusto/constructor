@@ -3,11 +3,11 @@ const path = require('path')
 const readFile = util.promisify(require('fs').readFile)
 const compiler = require('vue-template-compiler')
 const isFunction = require('lodash/isFunction')
-
+const Controller = require('~/controllers/abstract.controller.js')
 const tempDir = path.resolve(process.cwd(), 'tmp')
 
 // const { Schema } = require('mongoose')
-const db = require('../../../mongo')()
+const { db } = require('@db')
 
 const Model = db.model('Block')
 
@@ -38,32 +38,33 @@ exports.post = async (ctx, next) => {
             return acc
           }, schema)
         } else {
-          Object.keys(props).reduce((acc, prop) => {
-            const item = props[prop]
+          Object.keys(props)
+            .reduce((acc, prop) => {
+              const item = props[prop]
 
-            if (isFunction(item)) {
-              acc[prop] = item()
-              return acc
-            }
-
-            if (item.hasOwnProperty('default')) {
-              if (isFunction(item.default)) {
-                acc[prop] = item.default()
+              if (isFunction(item)) {
+                acc[prop] = item()
                 return acc
               }
-              acc[prop] = item.default
+
+              if (item.hasOwnProperty('default')) {
+                if (isFunction(item.default)) {
+                  acc[prop] = item.default()
+                  return acc
+                }
+                acc[prop] = item.default
+                return acc
+              }
+
+              acc[prop] = item.type()
+
               return acc
-            }
-
-            acc[prop] = item.type()
-
-            return acc
-          }, schema)
+            }, schema)
         }
 
         const block = new Model({
           blockName,
-          options: schema,
+          options: schema
         })
 
         block.save((err) => {
@@ -89,7 +90,7 @@ exports.getAll = async (ctx) => {
 
 exports.update = async (ctx) => {
   const { id: _id, options } = ctx.request.body
-  console.log(_id, options);
+  console.log(_id, options)
 
   try {
     ctx.body = await Model.findByIdAndUpdate({ _id }, { options })

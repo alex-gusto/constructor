@@ -1,17 +1,31 @@
-const Koa = require('koa');
-const serve = require('koa-static');
-const router = require('./router');
-require('dotenv').config()
+require('dotenv')
+  .config()
 
-const initApp = () => {
-  const app = new Koa();
+const Koa = require('koa')
+const serve = require('koa-static')
+const router = require('./router')
+const { connect, db } = require('./mongo')
 
-  router.prefix(process.env.VUE_APP_API_PREFIX)
+router.prefix(process.env.VUE_APP_API_PREFIX)
 
-  app
-    .use(router.routes())
-    .use(serve(`${__dirname}/dist`))
-    .listen({ port: process.env.SERVER_PORT }, () => console.log(`🚀 Server ready at http://localhost:${process.env.SERVER_PORT}`));
-};
+const app = new Koa()
 
-initApp();
+// add middleware
+app
+  .use(router.routes())
+  .use(serve(`${__dirname}/dist`))
+
+// connect database
+db
+  .on('error', console.log)
+  .on('disconnected', connect)
+  .once('open', listen)
+
+function listen() {
+  app.listen(
+    { port: process.env.SERVER_PORT },
+    () => console.log(`🚀 Server ready at http://localhost:${process.env.SERVER_PORT}`)
+  )
+}
+
+

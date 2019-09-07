@@ -1,4 +1,4 @@
-const db = require('@db')()
+const { db } = require('@db')
 const Controller = require('~/controllers/abstract.controller.js')
 
 const Model = db.model('Pages')

@@ -1,4 +1,4 @@
-const db = require('../mongo')()
+const { db } = require('../mongo')
 
 const Model = db.model('Article')
 
