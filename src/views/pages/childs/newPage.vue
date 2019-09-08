@@ -1,11 +1,11 @@
 <template>
   <v-flex>
-    New page
+    <h2>New page</h2>
 
     <v-select
       v-model="selectedBlocks"
       :items="blocksList"
-      label="Standard"
+      label="Block list"
       multiple
       chips
     >
@@ -18,27 +18,37 @@
       </template>
     </v-select>
 
-    <v-fab-transition>
-      <v-btn
-        v-if="$route.name === 'new-page'"
-        color="green"
-        fab
-        fixed
-        bottom
-        right
-        key="save"
-        @click.native="savePage"
-      >
-        <v-icon color="white">mdi-content-save</v-icon>
-      </v-btn>
-    </v-fab-transition>
+    <v-form @submit.prevent="submit">
+      <fieldset v-for="(block, i) in selectedBlocks" :key="i" style="padding: 15px;">
+        <ComponentForm v-bind="block" @change="componentOnChange"/>
+      </fieldset>
+
+      <v-fab-transition>
+        <v-btn
+          v-if="$route.name === 'new-page'"
+          color="green"
+          type="submit"
+          fab
+          fixed
+          bottom
+          right
+          key="save"
+        >
+          <v-icon color="white">mdi-content-save</v-icon>
+        </v-btn>
+      </v-fab-transition>
+    </v-form>
 
   </v-flex>
 </template>
 
 <script>
+  import ComponentForm from '@/components/helpers/ComponentForm'
+
   export default {
     name: 'newPage',
+
+    components: { ComponentForm },
 
     data() {
       return {
@@ -47,18 +57,22 @@
 
         pageData: {
           pageId: 'home',
-          alias: 'home'
+          alias: 'home',
+          blocks: {}
         }
+
       }
     },
 
-    computed: {
-      pageBlocks() {
-        return this.selectedBlocks.map(block => {
-          return {
-            componentId: block._id
-          }
-        })
+    watch: {
+      selectedBlocks(blocks) {
+        Object.keys(this.pageData.blocks)
+          .forEach(id => {
+            const block = blocks.find(block => block._id === id)
+            if (!block) {
+              this.$delete(this.pageData.blocks, id)
+            }
+          })
       }
     },
 
@@ -67,6 +81,16 @@
     },
 
     methods: {
+      componentOnChange(id, formData) {
+        this.pageData.blocks[id] = formData
+      },
+
+      submit() {
+        const body = this.pageData
+
+        this.savePage(body)
+      },
+
       async getBlocksList() {
         try {
           const { data } = await this.$axios.get('/builder/blocks')
@@ -77,11 +101,7 @@
       },
 
 
-      async savePage() {
-        const body = {
-          ...this.pageData,
-          blocks: this.pageBlocks
-        }
+      async savePage(body) {
         try {
           const { data } = await this.$axios.post('/builder/pages', body)
           console.log(data)

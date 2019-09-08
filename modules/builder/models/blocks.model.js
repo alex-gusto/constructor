@@ -3,7 +3,7 @@ const { Schema, model } = require('mongoose')
 const schema = new Schema(
   {
     componentName: String,
-    options: Schema.Types.Mixed
+    schemaDraft: Schema.Types.Mixed
   },
   { minimize: false }
 )

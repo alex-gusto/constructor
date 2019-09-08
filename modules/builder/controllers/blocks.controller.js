@@ -36,24 +36,28 @@ class BlocksController extends Controller {
       const parseAndSaveComponentSchema = async (componentName) => {
         const source = await loadComponent(componentName)
         const props = getComponentProps(source)
+
         if (!props) throw new Error('No props found!')
 
+        const schemaDraft = createMongoSchemaDraft(props)
+
         const block = new this.model({
-          componentName: removeExtensions(componentName)
+          componentName: removeExtensions(componentName),
+          schemaDraft
         })
 
         const { _id: componentId } = await block.save()
 
-        const schemaDraft = {
-          componentId: {
-            type: 'ObjectId',
-            default: componentId
-          },
-          componentName: {
-            type: 'String',
-            default: removeExtensions(componentName)
-          },
-          ...createMongoSchemaDraft(props)
+        // add component id
+        schemaDraft.componentId = {
+          type: 'ObjectId',
+          default: componentId
+        }
+
+        // add component name
+        schemaDraft.componentName = {
+          type: 'String',
+          default: removeExtensions(componentName)
         }
 
         const fileSource = `
