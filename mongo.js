@@ -1,6 +1,7 @@
 const path = require('path')
 const mongoose = require('mongoose')
 const { readdirSync } = require('fs')
+const eventBus = require('~/utils/event-bus')
 const isFunction = require('lodash/isFunction')
 const blocksModel = require('./modules/builder/models/blocks.model')
 
@@ -20,8 +21,8 @@ require('./modules/builder/models/pages.model')
 blocksModel()
 
 // load dynamic models
-readdirSync(dynamicModelsDir)
-  .forEach(file => require(path.join(dynamicModelsDir, file))())
+// readdirSync(dynamicModelsDir)
+//   .forEach(file => require(path.join(dynamicModelsDir, file))())
 
 function connect() {
   mongoose.connect(process.env.DB_URL, OPTIONS)

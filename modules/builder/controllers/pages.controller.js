@@ -1,9 +1,12 @@
 const { db } = require('@db')
 const path = require('path')
 const Controller = require('~/controllers/abstract.controller.js')
-
+const createModel = require('../utils/create-model')
+const createSchema = require('../utils/create-schema')
+const eventBus = require('~/utils/event-bus')
 
 const Model = db.model('Pages')
+const BlocksModel = db.model('Blocks')
 
 class PageController extends Controller {
   constructor() {
@@ -20,8 +23,7 @@ class PageController extends Controller {
     try {
       ctx.body = await page.save()
     } catch (e) {
-      ctx.body = e
-      ctx.status = 500
+      Controller.throwError(ctx, { body: e.toString() })
     }
   }
 }
@@ -43,20 +45,11 @@ async function saveBlocksData({ blocks }) {
       }
 
       if (this.index < this.blocks.length) {
-        const [id, data] = this.blocks[this.index]
-        let block
-
-        try {
-          const modelPath = path.resolve(__dirname, `../models/dynamic/${id}.model.js`)
-          const model = require(modelPath)
-          block = new model(data)
-        } catch (e) {
-          console.log(e)
-        }
+        const value = this.blocks[this.index]
         this.index++
         return {
           done: false,
-          value: block
+          value
         }
       } else {
         delete this.index
@@ -67,10 +60,29 @@ async function saveBlocksData({ blocks }) {
     }
   }
 
-  for (let block of obj) {
+  for (let [id, data] of obj) {
+    const currentModels = db.modelNames()
+    let blockModel
+
+    if (currentModels.includes(id)) {
+      blockModel = db.model(id)
+    } else {
+      const { schemaDraft } = await BlocksModel.findOne({ _id: id })
+      schemaDraft.blockId = {
+        type: 'ObjectId',
+        default: id
+      }
+
+      const schema = createSchema(schemaDraft)
+      blockModel = createModel(id, schema)
+    }
+
+
+    const block = new blockModel(data)
     const { _id } = await block.save()
+
     savedBlocks.push({
-      dynamicComponentId: _id
+      dynamicBlockId: _id
     })
   }
 

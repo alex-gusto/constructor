@@ -4,10 +4,10 @@ const { promisify } = require('util')
 const isFunction = require('lodash/isFunction')
 const compiler = require('vue-template-compiler')
 const readFile = promisify(require('fs').readFile)
-const writeFile = promisify(require('fs').writeFile)
+// const writeFile = promisify(require('fs').writeFile)
 const Controller = require('~/controllers/abstract.controller.js')
-const { Schema } = require('mongoose')
-
+// const { Schema } = require('mongoose')
+const eventBus = require('~/utils/event-bus')
 
 const blocksDir = path.resolve(process.cwd(), 'tmp/sections/')
 const Model = db.model('Blocks')
@@ -46,29 +46,31 @@ class BlocksController extends Controller {
           schemaDraft
         })
 
-        const { _id: componentId } = await block.save()
+        return await block.save()
 
-        // add component id
-        schemaDraft.componentId = {
-          type: 'ObjectId',
-          default: componentId
-        }
+        // // add component id
+        // schemaDraft.blockId = {
+        //   type: 'ObjectId',
+        //   default: result._id
+        // }
+        //
+        // // add component name
+        // schemaDraft.componentName = {
+        //   type: 'String',
+        //   default: removeExtensions(componentName)
+        // }
+        //
+        // eventBus.emit('AddModel', schemaDraft)
 
-        // add component name
-        schemaDraft.componentName = {
-          type: 'String',
-          default: removeExtensions(componentName)
-        }
-
-        const fileSource = `
-        const { Schema, model } = require('mongoose')
-        const createSchema = require('../../utils/create-schema.js')
-        
-        const schema = new Schema(createSchema('${JSON.stringify(schemaDraft)}'))
-        module.exports = model('${componentId}', schema)
-        `
-        const filePath = path.resolve(__dirname, `../models/dynamic/${componentId}.model.js`)
-        await writeFile(filePath, fileSource)
+        // const fileSource = `
+        // const { Schema, model } = require('mongoose')
+        // const createSchema = require('../../utils/create-schema.js')
+        //
+        // const schema = new Schema(createSchema('${JSON.stringify(schemaDraft)}'))
+        // module.exports = model('${componentId}', schema)
+        // `
+        // const filePath = path.resolve(__dirname, `../models/dynamic/${componentId}.model.js`)
+        // await writeFile(filePath, fileSource)
       }
 
 
@@ -80,7 +82,7 @@ class BlocksController extends Controller {
         ctx.body = await parseAndSaveComponentSchema(componentName)
       }
     } catch (e) {
-      ctx.body = e
+      ctx.body = e.toString()
       ctx.status = 500
     }
   }

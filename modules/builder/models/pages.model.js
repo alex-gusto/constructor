@@ -9,7 +9,7 @@ const schema = new Schema({
     required: true
   },
   blocks: [{
-    dynamicComponentId: {
+    dynamicBlockId: {
       type: Schema.Types.ObjectId,
       required: true
     }

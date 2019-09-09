@@ -20,8 +20,10 @@ class Controller {
       ctx.status = 200
       ctx.body = result
     } else {
-      ctx.status = 404
-      ctx.body = 'Page Not found'
+      Controller.throwError(ctx, {
+        status: 404,
+        body: 'Pages not found!'
+      })
     }
   }
 
@@ -32,8 +34,10 @@ class Controller {
       ctx.status = 200
       ctx.body = data
     } else {
-      ctx.status = 500
-      ctx.body = 'No found pages'
+      Controller.throwError(ctx, {
+        status: 404,
+        body: 'Pages not found!'
+      })
     }
   }
 
@@ -44,8 +48,7 @@ class Controller {
       ctx.body = await unit.save()
       ctx.status = 201
     } catch (e) {
-      ctx.status = 500
-      ctx.body = e
+      Controller.throwError(ctx, { body: e.toString() })
     }
   }
 
@@ -58,8 +61,7 @@ class Controller {
       ctx.body = await this.model.findByIdAndUpdate({ _id: id }, { options })
       ctx.status = 201
     } catch (e) {
-      ctx.status = 500
-      ctx.body = e
+      Controller.throwError(ctx, { body: e.toString() })
     }
   }
 
@@ -71,9 +73,13 @@ class Controller {
       ctx.body = await this.model.findByIdAndDelete({ _id: id })
       ctx.status = 201
     } catch (e) {
-      ctx.status = 500
-      ctx.body = e
+      Controller.throwError(ctx, { body: e.toString() })
     }
+  }
+
+  static throwError(ctx, { status = 500, body = 'Error message' }) {
+    ctx.status = 500
+    ctx.body = body
   }
 }
 
