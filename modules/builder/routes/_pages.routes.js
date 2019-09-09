@@ -9,7 +9,7 @@ const router = new Router({
   prefix: '/pages'
 })
 
-router.get('/', ctrl.getAll)
+router.get('/', ctrl.getAll.bind(ctrl))
 
 router.get('/:id', ctrl.getOne)
 

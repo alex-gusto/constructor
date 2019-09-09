@@ -96,7 +96,6 @@
           const { data } = await this.$axios.get('/builder/blocks')
           this.blocksList = data
         } catch (e) {
-
         }
       },
 

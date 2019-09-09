@@ -4,7 +4,7 @@
       <v-col>
         <div>
 
-          {{ blockName }}
+          {{ componentName }}
           <v-btn text icon color="pink" @click.native="removeBlock">
             <v-icon>mdi-delete</v-icon>
           </v-btn>
@@ -53,7 +53,7 @@
 
     props: {
       id: String,
-      blockName: {
+      componentName: {
         type: String,
         required: true
       },
