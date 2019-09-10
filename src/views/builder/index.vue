@@ -10,12 +10,12 @@
       <v-btn class="mr-4" type="submit">submit</v-btn>
     </v-form>
 
-    <TheDataTree/> 
+    <TheDataTree/>
   </v-flex>
 </template>
 
 <script>
-  import TheDataTree from '../../components/shared/TheDataTree'
+  import TheDataTree from '../../components/shared/data-tree'
 
   export default {
     components: { TheDataTree },
