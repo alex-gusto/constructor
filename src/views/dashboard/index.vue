@@ -1,7 +1,7 @@
 <template>
   <v-flex>
     <v-row>
-      <v-col sm="3">
+      <!-- <v-col sm="3">
         <DynamicComponent
           v-for="(block) in blocks"
           v-bind="block"
@@ -9,9 +9,11 @@
           :key="block._id"
           @removed="getBlocks"
         />
-      </v-col>
-      
-      <v-col>
+      </v-col>-->
+
+      <Dynamic v-for="(block, i) in blocks" v-bind="block" :key="i" />
+
+      <!-- <v-col>
         <v-btn outlined color="primary" dark @click.native="reloadIframe">Reload</v-btn>
         <iframe 
         ref="preview"
@@ -21,40 +23,43 @@
          width="100%" 
          height="100%"
          />
-      </v-col> 
+      </v-col>-->
     </v-row>
   </v-flex>
 </template>
 
 <script>
-  import DynamicComponent from '@/components/helpers/DynamicComponent'
+import DynamicComponent from "@/components/helpers/DynamicComponent";
+import Dynamic from "@/components/helpers/Dynamic";
 
-  export default {
-    components: { DynamicComponent },
-    data() {
-      return {
-        blocks: []
-      }
+export default {
+  components: { DynamicComponent, Dynamic },
+  data() {
+    return {
+      blocks: [
+        { name: "Block", props: { title: "Hello" } },
+        { name: "contents/Text1", props: { title: "Hello" } },
+        { name: "contents/Text2", props: { title: "Hello from Text2", content: "Contet text2" } }
+      ]
+    };
+  },
+
+  created() {
+    // this.getBlocks()
+  },
+
+  methods: {
+    async getBlocks() {
+      try {
+        const { data } = await this.$axios.get("/builder/blocks");
+        this.blocks = data;
+      } catch {}
     },
 
-    created() {
-      this.getBlocks()
-    },
-
-    methods: {
-      async getBlocks() {
-        try {
-          const { data } = await this.$axios.get('/builder/blocks')
-          this.blocks = data
-        } catch {
-
-        }
-      },
-
-      reloadIframe(){
-         const win = this.$refs.preview.contentWindow;
-         win.postMessage("сообщение", "*");
-      }
+    reloadIframe() {
+      const win = this.$refs.preview.contentWindow;
+      win.postMessage("сообщение", "*");
     }
   }
+};
 </script>
