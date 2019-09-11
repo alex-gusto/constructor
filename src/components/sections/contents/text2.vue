@@ -4,3 +4,6 @@
     <div>{{ content }}</div>
   </v-col>
 </template>
+<style lang="scss">
+  @import "common";
+</style>

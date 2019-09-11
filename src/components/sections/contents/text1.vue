@@ -5,7 +5,7 @@
 </template>
 
 <style lang="scss">
-.text1-title {
-  color: red;
-}
+  .text1-title {
+    color: red;
+  }
 </style>

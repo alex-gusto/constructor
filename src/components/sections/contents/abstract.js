@@ -1,20 +1,18 @@
-export default function (component, {url}) {
-return Object.assign(component, {
+export default function (component, { url }) {
+  return Object.assign(component, {
     props: ['title', 'content'],
-    data(){
-        return {
-
-        }
+    data() {
+      return {}
     },
 
-    created(){
-        this.getItems(url)
+    created() {
+      this.getItems(url)
     },
 
-    methods:{
-        getItems(url){
-            console.log(url);
-        }
+    methods: {
+      getItems(url) {
+        console.log(url)
+      }
     }
-})
+  })
 }
