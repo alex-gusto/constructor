@@ -1,5 +1,5 @@
 <template>
-  <li class="data-tree-list__row">
+  <li class="data-tree-list__row data-tree-with-key">
     <form
       class="data-tree-form">
       <div class="data-tree-form__inputs">

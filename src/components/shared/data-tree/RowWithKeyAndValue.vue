@@ -1,6 +1,6 @@
 <template>
-  <li class="data-tree-list__row">
-    <span>
+  <li class="data-tree-list__row data-tree-with-key">
+    <span class="data-tree-key">
       {{ rowName }}
     </span>
     <span class="data-tree-spacer_x">:</span>
@@ -46,5 +46,9 @@
 </script>
 
 <style lang="scss">
-
+  .data-tree {
+    &-with-key {
+      padding-left: 23px;
+    }
+  }
 </style>

@@ -1,10 +1,10 @@
 <template>
   <div :class="isHidden && 'data-tree-closed'">
-    <button class="data-tree-toggle">
-      <i :class="`el-icon-${isHidden ? 'plus': 'minus'}`" @click="toggle"/>
+    <button class="data-tree-toggle" @click="toggle">
+      {{ isHidden ? '+': '-' }}
     </button>
 
-    <span>{{ rowName }}</span>
+    <span class="data-tree-key">{{ rowName }}</span>
 
     <span class="data-tree-spacer_l">
       <el-button
@@ -55,14 +55,18 @@
 <style lang="scss">
   .data-tree {
     &-toggle {
-      padding: 3px;
-      color: black;
+      position: relative;
+      padding: 0 4px;
+      color: #fff;
+      background: black;
       display: inline-block;
-      margin-right: 5px;
+      margin-right: 10px;
       border-radius: 2px;
-      font-size: 12px;
+      font-size: 10px;
       outline: none;
       transition: 0.2s;
+      width: 14px;
+      text-align: center;
 
       &:active {
         transform: scale(0.6);

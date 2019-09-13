@@ -30,7 +30,8 @@
                 link: '/test'
               }
             ]
-          }
+          },
+          key: 'Lorem'
         })
       }
     },
@@ -199,6 +200,7 @@
 
   .data-tree {
     &-list {
+      position: relative;
       padding-left: 0;
       margin-bottom: 0;
       margin-top: 10px;
@@ -216,13 +218,29 @@
           z-index: 1;
         }
 
+        &:last-child:after {
+          content: none;
+        }
+
+        &::after {
+          display: block;
+          position: absolute;
+          z-index: 0;
+          left: 7px;
+          top: 5px;
+          width: 0;
+          height: calc(100% + 5px);
+          border-left: 1px dotted black;
+          content: '';
+        }
+
         &::before {
           display: block;
           position: absolute;
           z-index: 0;
           left: 9px;
-          top: calc(50% - 1px);
-          width: 14px;
+          top: 14px;
+          width: 12px;
           border-top: 1px dotted black;
           content: '';
         }
@@ -230,7 +248,25 @@
         & + .data-tree-list__row {
           margin-top: 5px;
         }
+
+        &:first-child::after {
+          height: calc(50% + 9px);
+          top: 50%;
+        }
+
+        & &:first-child::after {
+          top: -15px;
+          height: calc(100% + 25px);
+        }
+
+        &:nth-last-child(2):after {
+          height: calc(100% + 15px);
+        }
       }
+    }
+
+    &-key {
+      font-size: 12px;
     }
 
     &-spacer {
