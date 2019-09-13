@@ -3,18 +3,30 @@
     <span>
       {{ rowName }}
     </span>
-    <span> : </span>
-    <input
+    <span class="data-tree-spacer_x">:</span>
+    <el-input
       :value="rowValue"
-      type="text"
+      size="mini"
       class="data-tree-input"
       @input="onInput"
-      @change="onInput"
-    >
+    />
 
     <span>
-      <button class="data-tree-add" @click="$emit('add', path)">+</button>
-      <button class="data-tree-delete" @click="$emit('delete')">x</button>
+     <span class="data-tree-spacer_l">
+      <el-button
+        size="mini"
+        icon="el-icon-plus"
+        circle
+        @click="$emit('add', path)"
+      />
+
+      <el-button
+        size="mini"
+        icon="el-icon-delete"
+        circle
+        @click="$emit('delete')"
+      />
+    </span>
     </span>
   </li>
 </template>

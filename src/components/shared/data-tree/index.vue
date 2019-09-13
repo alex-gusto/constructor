@@ -195,25 +195,58 @@
 </script>
 
 <style lang="scss">
+  $spacer: 5px;
+
   .data-tree {
     &-list {
       padding-left: 0;
       margin-bottom: 0;
+      margin-top: 10px;
       list-style: none;
 
       & & {
         padding-left: 30px;
       }
 
-      &__row + .data-tree-list__row {
-        margin-top: 5px;
+      &__row {
+        position: relative;
+
+        > div {
+          position: relative;
+          z-index: 1;
+        }
+
+        &::before {
+          display: block;
+          position: absolute;
+          z-index: 0;
+          left: 9px;
+          top: calc(50% - 1px);
+          width: 14px;
+          border-top: 1px dotted black;
+          content: '';
+        }
+
+        & + .data-tree-list__row {
+          margin-top: 5px;
+        }
+      }
+    }
+
+    &-spacer {
+      &_x {
+        user-select: none;
+        margin: 0 $spacer;
+      }
+
+      &_l {
+        user-select: none;
+        margin-left: $spacer;
       }
     }
 
     &-input {
-      padding: 2px;
-      border-radius: 3px;
-      border: 1px dashed grey;
+      max-width: 200px;
     }
   }
 </style>

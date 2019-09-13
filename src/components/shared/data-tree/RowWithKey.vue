@@ -1,11 +1,25 @@
 <template>
   <div :class="isHidden && 'data-tree-closed'">
-    <button class="data-tree-toggle" @click="toggle">+</button>
+    <button class="data-tree-toggle">
+      <i :class="`el-icon-${isHidden ? 'plus': 'minus'}`" @click="toggle"/>
+    </button>
+
     <span>{{ rowName }}</span>
 
-    <span>
-      <button class="data-tree-add" @click="add">+</button>
-      <button class="data-tree-delete" @click="$emit('delete')">x</button>
+    <span class="data-tree-spacer_l">
+      <el-button
+        size="mini"
+        icon="el-icon-plus"
+        circle
+        @click="add"
+      />
+
+      <el-button
+        size="mini"
+        icon="el-icon-delete"
+        circle
+        @click="$emit('delete')"
+      />
     </span>
   </div>
 </template>
@@ -41,12 +55,18 @@
 <style lang="scss">
   .data-tree {
     &-toggle {
-      background: black;
       padding: 3px;
-      color: #fff;
+      color: black;
       display: inline-block;
       margin-right: 5px;
       border-radius: 2px;
+      font-size: 12px;
+      outline: none;
+      transition: 0.2s;
+
+      &:active {
+        transform: scale(0.6);
+      }
     }
 
     &-add,

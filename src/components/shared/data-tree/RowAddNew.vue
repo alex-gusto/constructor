@@ -1,26 +1,23 @@
 <template>
   <li class="data-tree-list__row">
     <form
-      class="data-tree-form"
-      @submit.prevent="submit"
-      @reset.prevent="reset"
-    >
-      <div>
-        <input
-          type="text"
+      class="data-tree-form">
+      <div class="data-tree-form__inputs">
+        <el-input
+          size="mini"
+          class="data-tree-input"
           v-model="formData.rowName"
+        />
+        <span class="data-tree-spacer_x">:</span>
+        <el-input
+          size="mini"
           class="data-tree-input"
-        >
-        <span> : </span>
-        <input
-          type="text"
           v-model="formData.rowValue"
-          class="data-tree-input"
-        >
+        />
       </div>
       <div class="data-tree-form__footer">
-        <button type="submit" class="data-tree-save">Save</button>
-        <button type="reset" class="data-tree-reset">Cancel</button>
+        <el-button size="mini" type="primary" @click="submit">Save</el-button>
+        <el-button size="mini" type="info" @click="reset">Cancel</el-button>
       </div>
     </form>
   </li>
@@ -56,6 +53,10 @@
 <style lang="scss">
   .data-tree {
     &-form {
+      &__inputs {
+        display: flex;
+      }
+
       &__footer {
         padding-top: 5px;
       }
