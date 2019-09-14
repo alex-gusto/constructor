@@ -1,4 +1,4 @@
-const { db } = require('@db')
+const { db } = require('~db')
 const path = require('path')
 const Controller = require('~/controllers/abstract.controller.js')
 const createModel = require('../utils/create-model')

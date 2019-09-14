@@ -1,5 +1,5 @@
 const path = require('path')
-const { db } = require('@db')
+const { db } = require('~db')
 const { promisify } = require('util')
 const isFunction = require('lodash/isFunction')
 const compiler = require('vue-template-compiler')
