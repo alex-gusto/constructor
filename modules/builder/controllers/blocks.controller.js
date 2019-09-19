@@ -47,30 +47,6 @@ class BlocksController extends Controller {
         })
 
         return await block.save()
-
-        // // add component id
-        // schemaDraft.blockId = {
-        //   type: 'ObjectId',
-        //   default: result._id
-        // }
-        //
-        // // add component name
-        // schemaDraft.componentName = {
-        //   type: 'String',
-        //   default: removeExtensions(componentName)
-        // }
-        //
-        // eventBus.emit('AddModel', schemaDraft)
-
-        // const fileSource = `
-        // const { Schema, model } = require('mongoose')
-        // const createSchema = require('../../utils/create-schema.js')
-        //
-        // const schema = new Schema(createSchema('${JSON.stringify(schemaDraft)}'))
-        // module.exports = model('${componentId}', schema)
-        // `
-        // const filePath = path.resolve(__dirname, `../models/dynamic/${componentId}.model.js`)
-        // await writeFile(filePath, fileSource)
       }
 
 

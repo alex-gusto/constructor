@@ -9,15 +9,29 @@
 
       <v-btn class="mr-4" type="submit">submit</v-btn>
     </v-form>
+
+    <div v-for="(block, i) in blocksList" :key="i">
+      <h3>{{ block.componentName }}</h3>
+      <DataTree :data="block.schemaDraft"/>  
+    </div>
   </v-flex>
 </template>
 
 <script>
+import DataTree from '@/components/shared/data-tree'
+
   export default {
+    components:{ DataTree },
+
     data() {
       return {
-        files: []
+        files: [],
+        blocksList: []
       }
+    },
+
+    created(){
+      this.getBlocksList()
     },
 
     methods: {
@@ -39,7 +53,15 @@
         } catch (e) {
           console.log(e.response)
         }
-      }
+      },
+
+      async getBlocksList() {
+        try {
+          const { data } = await this.$axios.get('/builder/blocks')
+          this.blocksList = data
+        } catch (e) {
+        }
+      },
     }
   }
 </script>

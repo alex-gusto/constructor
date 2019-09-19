@@ -84,29 +84,29 @@
 
     methods: {
       loadComponent() {
-        const vm = this
-        const { blockName } = this
+        // const vm = this
+        // const { blockName } = this
 
-        this.component = () => import(/* webpackChunkName: "[request]" */ `@/../tmp/sections/${blockName}`)
-          .then((component) => {
-            return component
-          })
-          .catch((err) => {
-            console.log(err)
+        // this.component = () => import(/* webpackChunkName: "[request]" */ `@/../tmp/sections/${blockName}`)
+        //   .then((component) => {
+        //     return component
+        //   })
+        //   .catch((err) => {
+        //     console.log(err)
 
-            // return error component
-            return {
-              render(h) {
-                return h(
-                  'div',
-                  {
-                    style: 'color: red; padding: 20px; text-align: left'
-                  },
-                  `An error occurred when load component. Reason: Component (${blockName}) that you are trying to load does not exist`
-                )
-              }
-            }
-          })
+        //     // return error component
+        //     return {
+        //       render(h) {
+        //         return h(
+        //           'div',
+        //           {
+        //             style: 'color: red; padding: 20px; text-align: left'
+        //           },
+        //           `An error occurred when load component. Reason: Component (${blockName}) that you are trying to load does not exist`
+        //         )
+        //       }
+        //     }
+        //   })
       },
 
       async submit() {
