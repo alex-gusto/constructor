@@ -9,16 +9,11 @@
 
       <v-btn class="mr-4" type="submit">submit</v-btn>
     </v-form>
-
-    <TheDataTree/>
   </v-flex>
 </template>
 
 <script>
-  import TheDataTree from '../../components/shared/data-tree'
-
   export default {
-    components: { TheDataTree },
     data() {
       return {
         files: []

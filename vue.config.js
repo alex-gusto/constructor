@@ -1,4 +1,5 @@
 require('dotenv').config()
+const path = require('path')
 
 const apiProxy = {}
 apiProxy[process.env.VUE_APP_API_PREFIX] = {
@@ -10,4 +11,14 @@ module.exports = {
   devServer: {
     proxy: apiProxy,
   },
+  configureWebpack: {
+    resolve: {
+      alias: {
+        '@': path.resolve(__dirname, 'views/admin'),
+      },
+    },
+    entry: {
+      app: './views/admin/main.js'
+    }
+  }
 };
