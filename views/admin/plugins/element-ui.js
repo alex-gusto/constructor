@@ -1,6 +1,8 @@
 import Vue from 'vue'
-import { Button, Select, Input } from 'element-ui'
+import ElementUI from 'element-ui'
+import 'element-ui/lib/theme-chalk/index.css'
 
-Vue.component(Input.name, Input)
-Vue.component(Button.name, Button)
-Vue.component(Select.name, Select)
+Vue.use(ElementUI)
+// Vue.component(Input.name, Input)
+// Vue.component(Button.name, Button)
+// Vue.component(Select.name, Select)

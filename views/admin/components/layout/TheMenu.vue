@@ -1,14 +1,15 @@
 <template>
-  <v-list dense nav>
-    <v-list-item v-for="(item, i) in menu" :key="i" link :to="item.href">
-      <v-list-item-icon>
-        <v-icon>{{ item.icon }}</v-icon>
-      </v-list-item-icon>
-      <v-list-item-title>
-        {{ item.label }}
-      </v-list-item-title>
-    </v-list-item>
-  </v-list>
+  <el-menu router>
+    <el-menu-item
+      v-for="(item, i) in menu"
+      :key="i"
+      :index="item.href"
+      link
+    >
+      <i :class="`el-icon-${item.icon}`"></i>
+      <span>{{ item.label }}</span>
+    </el-menu-item>
+  </el-menu>
 </template>
 
 <script>
@@ -19,22 +20,22 @@
         default: () => ([
           {
             label: 'Home',
-            icon: 'mdi-home',
+            icon: 's-home',
             href: '/'
           },
           {
             label: 'Blog',
-            icon: 'mdi-cake',
+            icon: 's-opportunity',
             href: '/blog'
           },
           {
             label: 'Pages',
-            icon: 'mdi-list',
+            icon: 'document',
             href: '/pages'
           },
           {
             label: 'Builder',
-            icon: 'mdi-spa',
+            icon: 's-tools',
             href: '/builder'
           }
         ])

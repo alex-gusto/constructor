@@ -7,7 +7,7 @@
     "build": "vue-cli-service build",
     "lint": "vue-cli-service lint",
     "server": "nodemon app.js",
-    "start": "npm run server & npm run serve",
+    "start": "npm run server && npm run serve",
     "postinstall": "link-module-alias"
   },
   "dependencies": {
