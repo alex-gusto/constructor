@@ -1,23 +1,33 @@
 <template>
   <li class="data-tree-list__row data-tree-with-key">
     <form
-      class="data-tree-form">
+      class="data-tree-form"
+      @submit.prevent="submit"
+      @reset.prevent="reset"
+      >
       <div class="data-tree-form__inputs">
-        <el-input
-          size="mini"
+        <v-text-field
+          outlined
           class="data-tree-input"
+          hide-details
           v-model="formData.rowName"
         />
         <span class="data-tree-spacer_x">:</span>
-        <el-input
-          size="mini"
+        <v-text-field
+          outlined
           class="data-tree-input"
+          hide-details
           v-model="formData.rowValue"
         />
       </div>
       <div class="data-tree-form__footer">
-        <el-button size="mini" type="primary" @click="submit">Save</el-button>
-        <el-button size="mini" type="info" @click="reset">Cancel</el-button>
+        <v-btn small type="submit" color="primary"  class="mr-5">
+          Save
+        </v-btn>
+
+         <v-btn small color="error" type="reset">
+          Cancel
+        </v-btn>
       </div>
     </form>
   </li>

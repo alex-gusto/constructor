@@ -7,7 +7,7 @@
     <span class="data-tree-key">{{ rowName }}</span>
 
     <span class="data-tree-spacer_l">
-      <el-button
+      <!-- <el-button
         size="mini"
         icon="el-icon-plus"
         circle
@@ -19,7 +19,7 @@
         icon="el-icon-delete"
         circle
         @click="$emit('delete')"
-      />
+      /> -->
     </span>
   </div>
 </template>

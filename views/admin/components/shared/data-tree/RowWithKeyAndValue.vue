@@ -4,28 +4,23 @@
       {{ rowName }}
     </span>
     <span class="data-tree-spacer_x">:</span>
-    <el-input
+    <v-text-field
       :value="rowValue"
-      size="mini"
+      outlined
+      hide-details
       class="data-tree-input"
       @input="onInput"
     />
 
     <span>
      <span class="data-tree-spacer_l">
-      <el-button
-        size="mini"
-        icon="el-icon-plus"
-        circle
-        @click="$emit('add', path)"
-      />
+        <v-btn icon @click="$emit('add', path)">
+          <v-icon color="green lighten-1">mdi-plus</v-icon>
+        </v-btn>
 
-      <el-button
-        size="mini"
-        icon="el-icon-delete"
-        circle
-        @click="$emit('delete')"
-      />
+        <v-btn icon @click="$emit('delete')">
+          <v-icon color="red lighten-1">mdi-minus</v-icon>
+        </v-btn>
     </span>
     </span>
   </li>

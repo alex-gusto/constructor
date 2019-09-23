@@ -282,7 +282,12 @@
     }
 
     &-input {
+      display: inline-block;
       max-width: 200px;
+
+      .v-input__slot{
+        min-height: 32px !important;
+      }
     }
   }
 </style>

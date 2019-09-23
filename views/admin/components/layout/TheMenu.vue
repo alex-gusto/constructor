@@ -1,15 +1,14 @@
 <template>
-  <el-menu router>
-    <el-menu-item
-      v-for="(item, i) in menu"
-      :key="i"
-      :index="item.href"
-      link
-    >
-      <i :class="`el-icon-${item.icon}`"></i>
-      <span>{{ item.label }}</span>
-    </el-menu-item>
-  </el-menu>
+  <v-list dense nav>
+    <v-list-item v-for="(item, i) in menu" :key="i" link :to="item.href">
+      <v-list-item-icon>
+        <v-icon>{{ item.icon }}</v-icon>
+      </v-list-item-icon>
+      <v-list-item-title>
+        {{ item.label }}
+      </v-list-item-title>
+    </v-list-item>
+  </v-list>
 </template>
 
 <script>
@@ -20,22 +19,22 @@
         default: () => ([
           {
             label: 'Home',
-            icon: 's-home',
+             icon: 'mdi-home',
             href: '/'
           },
           {
             label: 'Blog',
-            icon: 's-opportunity',
+            icon: 'mdi-cake',
             href: '/blog'
           },
           {
             label: 'Pages',
-            icon: 'document',
+             icon: 'mdi-list',
             href: '/pages'
           },
           {
             label: 'Builder',
-            icon: 's-tools',
+            icon: 'mdi-spa',
             href: '/builder'
           }
         ])
@@ -43,3 +42,9 @@
     }
   }
 </script>
+
+<style lang="scss" scoped>
+.el-menu{
+  height: 100%;
+}
+</style>
