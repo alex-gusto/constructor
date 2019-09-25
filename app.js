@@ -2,7 +2,6 @@ require('dotenv')
   .config()
 
 const Koa = require('koa')
-const Router = require('koa-router')
 const serve = require('koa-static')
 const router = require('./router')
 const { connect, db } = require('./mongo')
@@ -17,12 +16,12 @@ const app = new Koa();
 (async () => {
   const nuxt = new Nuxt(require('./views/front/nuxt.config'))
   const builder = new Builder(nuxt)
-  
+
   if(isDev){
     subscribeDB()
     await builder.build()
   }
-  
+
   // add middleware
   app
   .use(router.routes())
@@ -33,7 +32,7 @@ const app = new Koa();
     nuxt.render(ctx.req, ctx.res)
   })
   .use(serve(`${__dirname}/dist`))
-  
+
   if(!isDev) subscribeDB()
 })()
 
@@ -45,7 +44,7 @@ function subscribeDB(){
     .once('open', listen)
 }
 
-function listen() {  
+function listen() {
   app.listen(
     { port: process.env.SERVER_PORT },
     () => console.log(`🚀 Server ready at http://localhost:${process.env.SERVER_PORT}`)
