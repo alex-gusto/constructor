@@ -1,24 +1,27 @@
 const path = require('path')
-const Controller = require('~/controllers/abstract.controller.js')
+const createSchema = require('../utils/create-schema')
+const createModel = require('../utils/create-model')
+const { Schema } = require('mongoose')
 
-class DynamicModelController extends Controller {
-  constructor() {
-    super()
-  }
+class DynamicModelController {
+  static async loadDynamicModels(db) {
+    const Model = db.model('Blocks')
 
-  async create(ctx) {
-    const { componentId } = ctx.request.body
-    const modelPath = path.resolve(__dirname, `../models/dynamic/${componentId}.model.js`)
+    const blocks = await Model.find()
+    blocks.forEach(block => {
+      const optionsSchama = createSchema(block.schemaDraft)
+      const schema = {
+        componentName: {
+          type: Schema.Types.String,
+          default: block.componentName
+        },
+        options: optionsSchama
+      }
 
-    try {
-      const model = require(modelPath)
-      this.setModel(model)
+      createModel(block._id.toString(), schema)
+    })
 
-      await super.create(ctx)
-    } catch (e) {
-      ctx.status = 404
-      ctx.body = `${modelPath} - not found!`
-    }
+    console.log(db.modelNames())
   }
 }
 

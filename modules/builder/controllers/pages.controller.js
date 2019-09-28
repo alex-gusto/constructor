@@ -26,6 +26,27 @@ class PageController extends Controller {
       Controller.throwError(ctx, { body: e.toString() })
     }
   }
+
+  async getById(ctx) {
+    const { id } = ctx.params
+    const pageData = await this.model.findOne({ _id: id })
+
+    if (pageData) {
+      let i = 0
+      for (let { modelId, dynamicBlockId } of pageData.blocks) {
+        const dynamicBlockModel = db.model(modelId)
+        const blockOptions = await dynamicBlockModel.findById(dynamicBlockId)
+        pageData.blocks[i] = blockOptions
+        i++
+      }
+
+      ctx.body = pageData
+    } else {
+      Controller.throwError(ctx, {
+        status: 404
+      })
+    }
+  }
 }
 
 module.exports = PageController
@@ -60,21 +81,21 @@ async function saveBlocksData({ blocks }) {
     }
   }
 
-  for (let [id, data] of obj) {
+  for (let [modelId, data] of obj) {
     const currentModels = db.modelNames()
     let blockModel
 
-    if (currentModels.includes(id)) {
-      blockModel = db.model(id)
+    if (currentModels.includes(modelId)) {
+      blockModel = db.model(modelId)
     } else {
-      const { schemaDraft } = await BlocksModel.findOne({ _id: id })
+      const { schemaDraft } = await BlocksModel.findOne({ _id: modelId })
       schemaDraft.blockId = {
         type: 'ObjectId',
-        default: id
+        default: modelId
       }
 
       const schema = createSchema(schemaDraft)
-      blockModel = createModel(id, schema)
+      blockModel = createModel(modelId, schema)
     }
 
 
@@ -82,7 +103,8 @@ async function saveBlocksData({ blocks }) {
     const { _id } = await block.save()
 
     savedBlocks.push({
-      dynamicBlockId: _id
+      dynamicBlockId: _id,
+      modelId: modelId
     })
   }
 

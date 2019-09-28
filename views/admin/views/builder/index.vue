@@ -12,7 +12,7 @@
 
     <div v-for="(block, i) in blocksList" :key="i">
       <h3>{{ block.componentName }}</h3>
-      <DataTree :data="block.schemaDraft"/>  
+      <DataTree :data="block.schemaDraft"/>
     </div>
   </v-flex>
 </template>
@@ -39,7 +39,7 @@ import DataTree from '@/components/shared/data-tree'
         const formData = new FormData()
 
         this.files.forEach(file => {
-          formData.append('blocks', file)
+          formData.append('components', file)
         })
 
         this.post(formData)
@@ -47,7 +47,7 @@ import DataTree from '@/components/shared/data-tree'
 
       async post(body) {
         try {
-          const { data } = await this.$axios.post('/builder', body)
+          const { data } = await this.$axios.post('/builder/blocks', body)
           console.log(data)
 
         } catch (e) {

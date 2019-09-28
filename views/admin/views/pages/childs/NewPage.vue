@@ -1,45 +1,45 @@
 <template>
-  <v-flex>
-    <h2>New page</h2>
+    <v-flex>
+        <h2>New page</h2>
 
-    <v-select
-      v-model="selectedBlocks"
-      :items="blocksList"
-      label="Block list"
-      multiple
-      chips
-    >
-      <template v-slot:selection="{ item }">
-        <v-chip>{{ item.componentName }}</v-chip>
-      </template>
-
-      <template v-slot:item="{ item }">
-        {{ item.componentName }}
-      </template>
-    </v-select>
-
-    <v-form @submit.prevent="submit">
-      <fieldset v-for="(block, i) in selectedBlocks" :key="i" style="padding: 15px;">
-        <ComponentForm v-bind="block" @change="componentOnChange"/>
-      </fieldset>
-
-      <v-fab-transition>
-        <v-btn
-          v-if="$route.name === 'new-page'"
-          color="green"
-          type="submit"
-          fab
-          fixed
-          bottom
-          right
-          key="save"
+        <v-select
+                v-model="selectedBlocks"
+                :items="blocksList"
+                label="Block list"
+                multiple
+                chips
         >
-          <v-icon color="white">mdi-content-save</v-icon>
-        </v-btn>
-      </v-fab-transition>
-    </v-form>
+            <template v-slot:selection="{ item }">
+                <v-chip>{{ item.componentName }}</v-chip>
+            </template>
 
-  </v-flex>
+            <template v-slot:item="{ item }">
+                {{ item.componentName }}
+            </template>
+        </v-select>
+
+        <v-form @submit.prevent="submit">
+            <fieldset v-for="(block, i) in selectedBlocks" :key="i" style="padding: 15px;">
+                <ComponentForm v-bind="block" @change="componentOnChange"/>
+            </fieldset>
+
+            <v-fab-transition>
+                <v-btn
+                        v-if="$route.name === 'new-page'"
+                        color="green"
+                        type="submit"
+                        fab
+                        fixed
+                        bottom
+                        right
+                        key="save"
+                >
+                    <v-icon color="white">mdi-content-save</v-icon>
+                </v-btn>
+            </v-fab-transition>
+        </v-form>
+
+    </v-flex>
 </template>
 
 <script>
@@ -87,7 +87,7 @@
 
       submit() {
         const body = this.pageData
-
+        console.log(body)
         this.savePage(body)
       },
 

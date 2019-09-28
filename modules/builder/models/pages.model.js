@@ -12,6 +12,10 @@ const schema = new Schema({
     dynamicBlockId: {
       type: Schema.Types.ObjectId,
       required: true
+    },
+    modelId: {
+      type: Schema.Types.ObjectId,
+      required: true
     }
   }],
   meta: {
@@ -36,4 +40,4 @@ const schema = new Schema({
   }
 })
 
-model('Pages', schema)
+module.exports = model('Pages', schema)

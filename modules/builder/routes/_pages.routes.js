@@ -11,7 +11,7 @@ const router = new Router({
 
 router.get('/', ctrl.getAll.bind(ctrl))
 
-router.get('/:id', ctrl.getOne)
+router.get('/:id', ctrl.getById.bind(ctrl))
 
 router.post('/', bodyParse({ multipart: true }), ctrl.create.bind(ctrl))
 

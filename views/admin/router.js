@@ -35,12 +35,17 @@ export default new Router({
       children: [
         {
           path: '',
-          component: () => import('./views/pages/childs/pagesList.vue')
+          component: () => import('./views/pages/childs/PagesList.vue')
         },
         {
           path: 'new-page',
           name: 'new-page',
-          component: () => import('./views/pages/childs/newPage.vue')
+          component: () => import('./views/pages/childs/NewPage.vue')
+        },
+        {
+          path: ':id',
+          name: 'edit-page',
+          component: () => import('./views/pages/childs/EditPage.vue')
         }
       ]
     }
