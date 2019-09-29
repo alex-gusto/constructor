@@ -23,27 +23,31 @@ class PageController extends Controller {
     try {
       ctx.body = await page.save()
     } catch (e) {
-      Controller.throwError(ctx, { body: e.toString() })
+      if (e.errmsg.includes('duplicate key error')) {
+        Controller.validator(ctx, {
+          alias: 'Alias must be unique!'
+        })
+      } else {
+        Controller.throwError(ctx, { message: e.toString() })
+      }
     }
   }
 
   async getById(ctx) {
     const { id } = ctx.params
     const pageData = await this.model.findOne({ _id: id })
+      .populate({
+        path: 'blocks.dynamicBlockId'
+      })
+      .lean()
 
     if (pageData) {
-      let i = 0
-      for (let { modelId, dynamicBlockId } of pageData.blocks) {
-        const dynamicBlockModel = db.model(modelId)
-        const blockOptions = await dynamicBlockModel.findById(dynamicBlockId)
-        pageData.blocks[i] = blockOptions
-        i++
-      }
-
+      pageData.blocks = pageData.blocks.map(block => block.dynamicBlockId)
       ctx.body = pageData
     } else {
       Controller.throwError(ctx, {
-        status: 404
+        status: 404,
+        message: 'Page data not found!'
       })
     }
   }
@@ -85,26 +89,21 @@ async function saveBlocksData({ blocks }) {
     const currentModels = db.modelNames()
     let blockModel
 
+    // get exiting model or create it from schemaDraft
     if (currentModels.includes(modelId)) {
       blockModel = db.model(modelId)
     } else {
       const { schemaDraft } = await BlocksModel.findOne({ _id: modelId })
-      schemaDraft.blockId = {
-        type: 'ObjectId',
-        default: modelId
-      }
 
       const schema = createSchema(schemaDraft)
       blockModel = createModel(modelId, schema)
     }
-
-
     const block = new blockModel(data)
     const { _id } = await block.save()
 
     savedBlocks.push({
-      dynamicBlockId: _id,
-      modelId: modelId
+      blockId: _id,
+      dynamicModel: modelId
     })
   }
 

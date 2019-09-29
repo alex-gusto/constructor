@@ -6,15 +6,17 @@ const schema = new Schema({
   },
   alias: {
     type: String,
-    required: true
+    required: true,
+    unique: true
   },
   blocks: [{
-    dynamicBlockId: {
+    blockId: {
       type: Schema.Types.ObjectId,
-      required: true
+      required: true,
+      refPath: 'blocks.dynamicModel'
     },
-    modelId: {
-      type: Schema.Types.ObjectId,
+    dynamicModel: {
+      type: String,
       required: true
     }
   }],

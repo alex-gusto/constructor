@@ -22,7 +22,7 @@ class Controller {
     } else {
       Controller.throwError(ctx, {
         status: 404,
-        body: 'Pages not found!'
+        message: 'Pages not found!'
       })
     }
   }
@@ -36,7 +36,7 @@ class Controller {
     } else {
       Controller.throwError(ctx, {
         status: 404,
-        body: 'Pages not found!'
+        message: 'Pages not found!'
       })
     }
   }
@@ -48,7 +48,7 @@ class Controller {
       ctx.body = await unit.save()
       ctx.status = 201
     } catch (e) {
-      Controller.throwError(ctx, { body: e.toString() })
+      Controller.throwError(ctx, { message: e.toString() })
     }
   }
 
@@ -61,7 +61,7 @@ class Controller {
       ctx.body = await this.model.findByIdAndUpdate({ _id: id }, { options })
       ctx.status = 201
     } catch (e) {
-      Controller.throwError(ctx, { body: e.toString() })
+      Controller.throwError(ctx, { message: e.toString() })
     }
   }
 
@@ -73,12 +73,17 @@ class Controller {
       ctx.body = await this.model.findByIdAndDelete({ _id: id })
       ctx.status = 201
     } catch (e) {
-      Controller.throwError(ctx, { body: e.toString() })
+      Controller.throwError(ctx, { message: e.toString() })
     }
   }
 
-  static throwError(ctx, { status = 500, body = 'Error message' }) {
+  static throwError(ctx, { status = 500, message = 'Error message' }) {
     ctx.status = 500
+    ctx.body = message
+  }
+
+  static validator(ctx, body) {
+    ctx.status = 422
     ctx.body = body
   }
 }

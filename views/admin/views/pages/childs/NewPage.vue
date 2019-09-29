@@ -2,6 +2,19 @@
     <v-flex>
         <h2>New page</h2>
 
+        <v-text-field
+                v-model="pageData.alias"
+                label="Page alias"
+                :error="!!hasError('alias')"
+                :error-messages="hasError('alias')"
+        />
+
+        <v-text-field
+                v-model="pageData.pageId"
+                label="Page id"
+        />
+
+
         <v-select
                 v-model="selectedBlocks"
                 :items="blocksList"
@@ -56,11 +69,12 @@
         selectedBlocks: [],
 
         pageData: {
-          pageId: 'home',
-          alias: 'home',
+          pageId: null,
+          alias: null,
           blocks: {}
-        }
+        },
 
+        errors: {}
       }
     },
 
@@ -105,8 +119,12 @@
           const { data } = await this.$axios.post('/builder/pages', body)
           console.log(data)
         } catch (e) {
-
+          this.errors = e.response.data
         }
+      },
+
+      hasError(name) {
+        return this.errors[name]
       }
     }
   }
