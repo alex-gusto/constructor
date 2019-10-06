@@ -37,12 +37,12 @@ class PageController extends Controller {
     const { id } = ctx.params
     const pageData = await this.model.findOne({ _id: id })
       .populate({
-        path: 'blocks.dynamicBlockId'
+        path: 'blocks.blockId'
       })
       .lean()
 
     if (pageData) {
-      pageData.blocks = pageData.blocks.map(block => block.dynamicBlockId)
+      pageData.blocks = pageData.blocks.map(block => block.blockId)
       ctx.body = pageData
     } else {
       Controller.throwError(ctx, {

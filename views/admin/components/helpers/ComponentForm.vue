@@ -1,13 +1,13 @@
 <template>
-  <div>
-    <h3>{{ componentName }}</h3>
-    <v-text-field
-      v-for="(value, name, i) in schemaDraft"
-      v-model="formData[name]"
-      :key="i"
-      :label="name"
-    />
-  </div>
+    <div>
+        <h3>{{ componentName }}</h3>
+        <v-text-field
+                v-for="(value, name, i) in options"
+                v-model="formData[name]"
+                :key="i"
+                :label="name"
+        />
+    </div>
 </template>
 
 <script>
@@ -21,16 +21,16 @@
 
       componentName: String,
 
-      schemaDraft: {
+      options: {
         type: Object,
         default: () => ({})
       }
     },
 
     data() {
-      const formData = Object.entries(this.schemaDraft)
+      const formData = Object.entries(this.options)
         .reduce((formData, [field, value]) => {
-          formData[field] = isNill(value.default) ? '' : value.default
+          formData[field] = isNill(value.default) ? value : value.default
           return formData
         }, {})
 
@@ -42,9 +42,8 @@
     watch: {
       formData: {
         handler(v) {
-          this.$emit('change', this._id, v)
+          this.$emit('input', v)
         },
-        immediate: true,
         deep: true
       }
     },
@@ -53,7 +52,7 @@
 
     // render(h) {
     //   const title = h('h3', this.componentName)
-    //   const fields = convertSchemaDraftToForm.call(this, this.schemaDraft)
+    //   const fields = convertSchemaDraftToForm.call(this, this.options)
     //
     //   return h('div', [title, ...fields])
     //

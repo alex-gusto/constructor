@@ -19,7 +19,9 @@ router.post('/blocks', bodyParse({
 
 router.get('/blocks', ctrl.getAll.bind(ctrl))
 
-router.put('/blocks/:id', bodyParse({ multipart: true }), ctrl.update)
+router.get('/blocks/:id', ctrl.getById.bind(ctrl))
+
+router.put('/blocks/:id', bodyParse({ multipart: true }), ctrl.update.bind(ctrl))
 
 router.delete('/blocks/:id', ctrl.delete)
 

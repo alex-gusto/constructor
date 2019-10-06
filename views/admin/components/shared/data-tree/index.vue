@@ -1,5 +1,6 @@
 <script>
-  import isObject from 'lodash/isObject'
+  import isPlainObject from 'lodash/isPlainObject'
+  import cloneDeep from 'lodash/cloneDeep'
   import RowAddNew from './RowAddNew'
   import RowWithKey from './RowWithKey'
   import RowWithKeyAndValue from './RowWithKeyAndValue'
@@ -38,7 +39,20 @@
 
     data() {
       return {
-        dataTree: this.data
+        dataTree: this.data || {}
+      }
+    },
+
+    watch: {
+      data(v) {
+        this.dataTree = cloneDeep(v)
+      },
+
+      dataTree: {
+        handler(v) {
+          this.$emit('change', v)
+        },
+        deep: true
       }
     },
 
@@ -49,7 +63,7 @@
       function create(data, path = '') {
         const list = Object.entries(data)
           .reduce((acc, [key, value]) => {
-            if (isObject(value) && !isEmpty(value)) {
+            if (isPlainObject(value) && !isEmpty(value)) {
               const childs = [
                 h('RowWithKey', {
                   props: {
@@ -97,7 +111,7 @@
                 })
               )
             } else {
-              if (isObject(value)) {
+              if (isPlainObject(value)) {
                 value = ''
               }
 
@@ -196,98 +210,98 @@
 </script>
 
 <style lang="scss">
-  $spacer: 5px;
+    $spacer: 5px;
 
-  .data-tree {
-    &-list {
-      position: relative;
-      padding-left: 0;
-      margin-bottom: 0;
-      margin-top: 10px;
-      list-style: none;
+    .data-tree {
+        &-list {
+            position: relative;
+            padding-left: 0;
+            margin-bottom: 0;
+            margin-top: 10px;
+            list-style: none;
 
-      & & {
-        padding-left: 30px;
-      }
+            & & {
+                padding-left: 30px;
+            }
 
-      &__row {
-        position: relative;
+            &__row {
+                position: relative;
 
-        > div {
-          position: relative;
-          z-index: 1;
+                > div {
+                    position: relative;
+                    z-index: 1;
+                }
+
+                &:last-child:after {
+                    content: none;
+                }
+
+                &::after {
+                    display: block;
+                    position: absolute;
+                    z-index: 0;
+                    left: 7px;
+                    top: 5px;
+                    width: 0;
+                    height: calc(100% + 5px);
+                    border-left: 1px dotted black;
+                    content: '';
+                }
+
+                &::before {
+                    display: block;
+                    position: absolute;
+                    z-index: 0;
+                    left: 9px;
+                    top: 14px;
+                    width: 12px;
+                    border-top: 1px dotted black;
+                    content: '';
+                }
+
+                & + .data-tree-list__row {
+                    margin-top: 5px;
+                }
+
+                &:first-child::after {
+                    height: calc(50% + 9px);
+                    top: 50%;
+                }
+
+                & &:first-child::after {
+                    top: -15px;
+                    height: calc(100% + 25px);
+                }
+
+                &:nth-last-child(2):after {
+                    height: calc(100% + 15px);
+                }
+            }
         }
 
-        &:last-child:after {
-          content: none;
+        &-key {
+            font-size: 12px;
         }
 
-        &::after {
-          display: block;
-          position: absolute;
-          z-index: 0;
-          left: 7px;
-          top: 5px;
-          width: 0;
-          height: calc(100% + 5px);
-          border-left: 1px dotted black;
-          content: '';
+        &-spacer {
+            &_x {
+                user-select: none;
+                margin: 0 $spacer;
+            }
+
+            &_l {
+                user-select: none;
+                margin-left: $spacer;
+            }
         }
 
-        &::before {
-          display: block;
-          position: absolute;
-          z-index: 0;
-          left: 9px;
-          top: 14px;
-          width: 12px;
-          border-top: 1px dotted black;
-          content: '';
-        }
+        &-input {
+            display: inline-block;
+            max-width: 200px;
 
-        & + .data-tree-list__row {
-          margin-top: 5px;
+            .v-input__slot {
+                min-height: 32px !important;
+            }
         }
-
-        &:first-child::after {
-          height: calc(50% + 9px);
-          top: 50%;
-        }
-
-        & &:first-child::after {
-          top: -15px;
-          height: calc(100% + 25px);
-        }
-
-        &:nth-last-child(2):after {
-          height: calc(100% + 15px);
-        }
-      }
     }
-
-    &-key {
-      font-size: 12px;
-    }
-
-    &-spacer {
-      &_x {
-        user-select: none;
-        margin: 0 $spacer;
-      }
-
-      &_l {
-        user-select: none;
-        margin-left: $spacer;
-      }
-    }
-
-    &-input {
-      display: inline-block;
-      max-width: 200px;
-
-      .v-input__slot{
-        min-height: 32px !important;
-      }
-    }
-  }
 </style>

@@ -15,6 +15,6 @@ router.get('/:id', ctrl.getById.bind(ctrl))
 
 router.post('/', bodyParse({ multipart: true }), ctrl.create.bind(ctrl))
 
-router.put('/', bodyParse({ multipart: true }), ctrl.update)
+router.put('/:id', bodyParse({ multipart: true }), ctrl.update.bind(ctrl))
 
 module.exports = router

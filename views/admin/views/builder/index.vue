@@ -1,27 +1,28 @@
 <template>
-  <v-flex>
-    <v-form @submit.prevent="submit">
-      <v-file-input
-        v-model="files"
-        label="Load components"
-        multiple
-      />
+    <router-view/>
+    <!--<v-flex>-->
+    <!--<v-form @submit.prevent="submit">-->
+    <!--<v-file-input-->
+    <!--v-model="files"-->
+    <!--label="Load components"-->
+    <!--multiple-->
+    <!--/>-->
 
-      <v-btn class="mr-4" type="submit">submit</v-btn>
-    </v-form>
+    <!--<v-btn class="mr-4" type="submit">submit</v-btn>-->
+    <!--</v-form>-->
 
-    <div v-for="(block, i) in blocksList" :key="i">
-      <h3>{{ block.componentName }}</h3>
-      <DataTree :data="block.schemaDraft"/>
-    </div>
-  </v-flex>
+    <!--<div v-for="(block, i) in blocksList" :key="i">-->
+    <!--<h3>{{ block.componentName }}</h3>-->
+    <!--<DataTree :data="block.schemaDraft"/>-->
+    <!--</div>-->
+    <!--</v-flex>-->
 </template>
 
 <script>
-import DataTree from '@/components/shared/data-tree'
+  import DataTree from '@/components/shared/data-tree'
 
   export default {
-    components:{ DataTree },
+    components: { DataTree },
 
     data() {
       return {
@@ -30,7 +31,7 @@ import DataTree from '@/components/shared/data-tree'
       }
     },
 
-    created(){
+    created() {
       this.getBlocksList()
     },
 
@@ -61,7 +62,7 @@ import DataTree from '@/components/shared/data-tree'
           this.blocksList = data
         } catch (e) {
         }
-      },
+      }
     }
   }
 </script>

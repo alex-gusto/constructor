@@ -15,6 +15,7 @@ const schema = new Schema({
       required: true,
       refPath: 'blocks.dynamicModel'
     },
+
     dynamicModel: {
       type: String,
       required: true

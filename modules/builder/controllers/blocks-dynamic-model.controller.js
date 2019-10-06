@@ -3,8 +3,8 @@ const createSchema = require('../utils/create-schema')
 const createModel = require('../utils/create-model')
 const { Schema } = require('mongoose')
 
-class DynamicModelController {
-  static async loadDynamicModels(db) {
+class BlocksDynamicModelController {
+  static async load(db) {
     const Model = db.model('Blocks')
 
     const blocks = await Model.find()
@@ -25,4 +25,4 @@ class DynamicModelController {
   }
 }
 
-module.exports = DynamicModelController
+module.exports = BlocksDynamicModelController

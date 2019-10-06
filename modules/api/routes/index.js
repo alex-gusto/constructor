@@ -8,9 +8,9 @@ const router = new Router({
   prefix: '/front-api'
 })
 
-router.get('/en/pages/:alias', ctrl.getPage.bind(ctrl))
+router.get('/pages/:alias', ctrl.getPage.bind(ctrl))
 
-router.get('/', (ctx) => {
+router.get('/data', (ctx) => {
   ctx.body = {
     data: {
       type: 'globals',

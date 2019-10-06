@@ -10,7 +10,21 @@ class PageController extends Controller {
 
   async getPage(ctx) {
     const { alias } = ctx.params
-    await this.getOne(ctx, { alias })
+    const pageData = await this.model.findOne({ alias })
+      .populate({
+        path: 'blocks.blockId'
+      })
+      .lean()
+
+    if (pageData) {
+      pageData.blocks = pageData.blocks.map(block => block.blockId)
+      ctx.body = pageData
+    } else {
+      Controller.throwError(ctx, {
+        status: 404,
+        message: 'Page data not found!'
+      })
+    }
   }
 }
 

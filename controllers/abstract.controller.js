@@ -27,6 +27,24 @@ class Controller {
     }
   }
 
+  async getById(ctx) {
+    const { id } = ctx.params
+    const result = await this.model.findById(id, {
+      _id: 0,
+      __v: 0
+    })
+
+    if (result) {
+      ctx.status = 200
+      ctx.body = result
+    } else {
+      Controller.throwError(ctx, {
+        status: 404,
+        message: 'Pages not found!'
+      })
+    }
+  }
+
   async getAll(ctx) {
     const data = await this.model.find()
 
@@ -45,8 +63,8 @@ class Controller {
     const unit = new this.model(ctx.request.body)
 
     try {
-      ctx.body = await unit.save()
       ctx.status = 201
+      ctx.body = await unit.save()
     } catch (e) {
       Controller.throwError(ctx, { message: e.toString() })
     }
@@ -54,11 +72,10 @@ class Controller {
 
   async update(ctx) {
     const { id } = ctx.params
-    const { options } = ctx.request.body
-    console.log(id, options)
+    console.log(id, ctx.request.body)
 
     try {
-      ctx.body = await this.model.findByIdAndUpdate({ _id: id }, { options })
+      ctx.body = await this.model.findByIdAndUpdate({ _id: id }, ctx.request.body)
       ctx.status = 201
     } catch (e) {
       Controller.throwError(ctx, { message: e.toString() })

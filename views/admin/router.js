@@ -2,7 +2,10 @@ import Vue from 'vue'
 import Router from 'vue-router'
 import Dashboard from './views/dashboard/index.vue'
 
+const glob = require('glob')
+
 Vue.use(Router)
+
 
 export default new Router({
   mode: 'history',
@@ -28,7 +31,41 @@ export default new Router({
       ]
     }, {
       path: '/builder',
-      component: () => import('./views/builder/index.vue')
+      component: () => import('./views/builder/index.vue'),
+      children: [
+        {
+          path: 'entity-types',
+          component: () => import('./views/builder/types/index.vue'),
+          children: [
+            {
+              path: '',
+              name: 'types-list',
+              component: () => import('./views/builder/types/TypesList.vue')
+            },
+            {
+              path: ':id',
+              name: 'edit-type',
+              component: () => import('./views/builder/types/EditType.vue')
+            }
+          ]
+        },
+        {
+          path: 'blocks',
+          component: () => import('./views/builder/blocks/index.vue'),
+          children: [
+            {
+              path: '',
+              name: 'blocks-list',
+              component: () => import('./views/builder/blocks/BlocksList.vue')
+            },
+            {
+              path: ':id',
+              name: 'edit-block',
+              component: () => import('./views/builder/blocks/EditBlock.vue')
+            }
+          ]
+        }
+      ]
     }, {
       path: '/pages',
       component: () => import('./views/pages/index.vue'),
