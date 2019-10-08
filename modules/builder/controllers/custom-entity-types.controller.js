@@ -1,6 +1,6 @@
 const path = require('path')
 const capitalize = require('lodash/capitalize')
-const { Schema, SchemaTypes } = require('mongoose')
+const { Schema, SchemaTypes, model } = require('mongoose')
 const createSchemaType = require('../utils/create-schema-type')
 
 class CustomEntityTypesController {
@@ -12,10 +12,20 @@ class CustomEntityTypesController {
       const typeName = capitalize(name)
 
       if (!SchemaTypes[typeName]) {
-        console.log(createSchemaType(name))
+        Schema.Types[typeName] = createSchemaType(name)
       }
     })
 
+    CustomEntityTypesController.test()
+  }
+
+  static test(){
+    var testSchema = new Schema({ test: SchemaTypes.Image });
+    var Test = model('CustomTypeExample', testSchema);
+
+    var t = new Test();
+    t.test = 'abc';
+    console.log(t.validateSync());
   }
 }
 

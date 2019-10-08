@@ -1,20 +1,28 @@
 const mongoose = require('mongoose')
+const { isPrimitive } =require('~/utils/types')
 
 function create(name, schemaDraft) {
   class Type extends mongoose.SchemaType {
     constructor(key, options) {
       super(key, options, name)
-
-      this.schemaDraft = schemaDraft
     }
+  }
 
-    get rootType() {
-      return typeof this.schemaDraft
-    }
+  if (isPrimitive(schemaDraft)){
+    Type.prototype.cast = castForPrimitive
+  } else {
+    Type.prototype.cast = castForObject
+  }  
 
-    cast(val) {
+  Object.defineProperty(Type, 'name', { value: name });
 
-    }
+  function castForPrimitive(val) {
+    return val;
+  }
+
+  function castForObject(val) {
+    val.log
+    return val
   }
 
   return Type
